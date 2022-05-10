@@ -1,0 +1,49 @@
+{
+  "name": "ilblock-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p $PORT",
+    "test": "jest --watch",
+    "tailwind:css": "postcss utils/tailwind/tailwind.css -o utils/tailwind/styles.css"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.6.2",
+    "@mui/material": "^5.6.4",
+    "@mui/styled-engine-sc": "^5.6.1",
+    "@reduxjs/toolkit": "^1.6.2",
+    "@types/styled-components": "^5.1.15",
+    "autoprefixer": "^10.4.0",
+    "axios": "^0.24.0",
+    "moxios": "^0.4.0",
+    "next": "^12.0.5-canary.10",
+    "next-images": "^1.8.2",
+    "postcss": "^8.4.1",
+    "postcss-cli": "^9.0.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
+    "redux-actions": "^2.6.5",
+    "redux-logger": "^3.0.6",
+    "redux-mock-store": "^1.5.4",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.0",
+    "styled-components": "^5.3.3",
+    "tailwindcss": "^2.2.19"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "@types/node": "^16.11.7",
+    "@types/react": "^17.0.34",
+    "babel-jest": "^27.3.1",
+    "jest": "^27.3.1",
+    "typescript": "^4.4.4"
+  }
+}
