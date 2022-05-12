@@ -8,7 +8,11 @@ import HomeWhyUs from "./../components/home-why-us/home-why-us.component";
 import InjectToHome from "../components/injectToLanding/injectToHome.component";
 import Footer from "../components/footer/footer.component";
 import Carousel from "../components/carousel/carousel.component";
-
+import LetsFind from "../components/lets-help";
+import { SeeMoreContainer } from "../components/injectToLanding/inject.styles";
+import { Button } from "@mui/material";
+import axios from "axios";
+import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 
 function Home() {
   const [isShown, setSidebar] = useState(false);
@@ -23,14 +27,28 @@ function Home() {
       <PageWrap>
         <Navbar onPress={ToggleSidebar} />
         <HomepageBanner />
-        <br />
-        <br />
+        <LetsFind />
         <InjectToHome />
+        <SeeMoreContainer>
+          <Button style={{ fontStyle: 'uppercase', marginBottom: 30 }} variant='outlined'>
+            see more
+          </Button>
+        </SeeMoreContainer>
       </PageWrap>
-      {/* <Carousel/> */}
       <Footer />
     </Layout>
   );
+}
+export const getServerSideProps: GetServerSideProps = async ({res,req}) => {
+
+  console.log('context',req);
+  axios.get('http://localhost:3000/api/user')
+    .then(res => {
+      console.log(res)
+    })
+  return {
+    props: {}, // will be passed to the page component as props
+  }
 }
 
 export default Home;

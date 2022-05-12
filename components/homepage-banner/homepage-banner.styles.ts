@@ -96,7 +96,7 @@ export const HomePageMobileBannerMainTextBlock = styled.div`
 export const HomePageBannerIllustrationSection = styled.div`
   width: 50%;
   left: 51%;
-  top:30%;
+  top:50%;
   height: inherit;
   position: absolute;
   z-index:-10;

@@ -4,25 +4,22 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import CarCards from '../car-card';
-import { Button, Typography } from '@mui/material';
-import { SeeMoreContainer } from './inject.styles';
 import useTheme from '../../hooks/useTheme';
-import { posts } from './posts.data';
+import CardLits from '../injectToLanding/injectToHome.component';
+import FilterCard from '../filter-card';
 
 
-
-export default function CardLits({ toggleShowAds }) {
+export default function WithFilter({toggleShowAds}) {
   const theme = useTheme();
   return (
     <Box sx={{ flexGrow: 1, mb: 10 }}>
       <Grid container spacing={1}>
-        {
-          posts.map((el, i) => (
-            <Grid key={i} item xs={6} md={4} lg={4}>
-              <CarCards onClick={toggleShowAds} data={el} />
-            </Grid>
-          ))
-        }
+        <Grid item xs={12} md={3} lg={3}>
+          <FilterCard />
+        </Grid>
+        <Grid item xs={12} md={9} lg={9}>
+          <CardLits toggleShowAds={toggleShowAds}/>
+        </Grid>
       </Grid>
     </Box>
   );

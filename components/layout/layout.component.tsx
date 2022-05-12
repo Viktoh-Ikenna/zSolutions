@@ -1,9 +1,19 @@
 import LayoutBlock from "./layout.styles";
 import Head from "next/head";
+import { useDispatch, useSelector } from "react-redux";
+import AddPostSidebar from "../user-addpost";
+import { DisplayAddPost } from "../../redux/singles/singles.actions";
 
 export const siteTitle = "iLearn Block... Crypto Education";
 
 const Layout = ({ children }: any) => {
+  const addpost = useSelector(state => state.SinglesReducers).addPost;
+  const dispatch = useDispatch();
+
+  const setDispayPost = (payload) => {
+    dispatch(DisplayAddPost(payload))
+  }
+  console.log(addpost);
   return (
     <LayoutBlock>
       <Head>
@@ -23,6 +33,7 @@ const Layout = ({ children }: any) => {
       </Head>
 
       {children}
+      <AddPostSidebar addPropty={addpost} setAddPropty={setDispayPost} />
     </LayoutBlock>
   );
 };

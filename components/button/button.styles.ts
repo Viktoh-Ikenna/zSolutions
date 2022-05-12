@@ -7,7 +7,7 @@ const buttonCSS = css`
   transition: 0.2s;
   ${PerfectlyCentered};
   border-radius: 6px;
-  font-weight: bold;
+  font-weight: normal;
   cursor: pointer;
 `;
 interface buttonProp {

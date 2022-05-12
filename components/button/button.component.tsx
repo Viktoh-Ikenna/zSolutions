@@ -13,17 +13,16 @@ interface buttonProp {
   alt?: any;
 }
 
-function NavbarLogInBtn({ text, bgcolor, src, alt }: buttonProp) {
+function NavbarLogInBtn({ text, bgcolor, src, alt, ...props }: any) {
   return (
-    <NavbarLogInBtnBlock bgcolor={bgcolor}>
-      <MyImage src={src} alt={alt} />
+    <NavbarLogInBtnBlock bgcolor={bgcolor} {...props}>
       <div>{text}</div>
     </NavbarLogInBtnBlock>
   );
 }
 
-function NavbarRegBtn({ text }: any) {
-  return <NavbarRegBtnBlock>{text}</NavbarRegBtnBlock>;
+function NavbarRegBtn({ text, ...props }: any) {
+  return <NavbarRegBtnBlock {...props}>{text}</NavbarRegBtnBlock>;
 }
 
 function ActionButton({ text }: any) {
