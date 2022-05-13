@@ -1,0 +1,3 @@
+const DISPLAY_ADD_POST = "DISPLAY_ADD_POST";
+
+export { DISPLAY_ADD_POST };

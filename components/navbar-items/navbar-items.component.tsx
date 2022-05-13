@@ -7,6 +7,9 @@ import Svgs from "./../../assets/svgs";
 import NavbarItem from "./../navbar-item/navbar-item.component";
 import NavbarItemsData from "./navbar-items.data";
 import { MobileNavContentWrap } from "../navbar/navbar.styles";
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import { deepOrange } from '@mui/material/colors';
 
 const { User } = Svgs;
 
@@ -20,12 +23,25 @@ function NavbarLinksItems() {
   );
 }
 
-function NavbarAccountItems() {
+function NavbarAccountItems({ setOpenLogin, setOpenSignUp }) {
   return (
     <NavbarAccountItemsBlock>
-      <NavbarRegBtn text="Register" />
+      <NavbarLogInBtn text="Login" onClick={() => setOpenLogin(true)} />
+      <NavbarRegBtn text="Register" onClick={() => setOpenSignUp(true)} />
+    </NavbarAccountItemsBlock>
+  );
+}
+function NavbarAccountLoggedInItem({ add }) {
+  return (
+    <NavbarAccountItemsBlock>
+      <Avatar
+        sx={{ bgcolor: deepOrange[500] }}
+        alt="Remy Sharp"
+        src="/broken-image.jpg"
+      />
+      <NavbarRegBtn text="Sell" onClick={() => add(true)} />
     </NavbarAccountItemsBlock>
   );
 }
 
-export { NavbarLinksItems, NavbarAccountItems };
+export { NavbarLinksItems, NavbarAccountItems, NavbarAccountLoggedInItem };

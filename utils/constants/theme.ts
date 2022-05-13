@@ -5,7 +5,7 @@ const theme = {
     link: "rgba(13, 25, 48, 0.6)",
     text: "rgba(13, 25, 48, 0.87)",
     small: "rgba(13, 25, 48, 0.38)",
-
+    light: "#808080",
   },
 
   boxShadow: ``,

@@ -4,55 +4,68 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import CarCards from '../car-card';
-import { Button, Typography } from '@mui/material';
-import { SeeMoreContainer } from './inject.styles';
 import useTheme from '../../hooks/useTheme';
+import { posts } from './posts.data';
+import { useSelector } from 'react-redux';
+import Skeleton from '@mui/material/Skeleton';
+import { Typography } from '@mui/material';
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
 
-export default function FullWidthGrid() {
+export default function CardLits({ toggleShowAds }) {
+  const data = useSelector(state => state.carReducers).allCars;
   const theme = useTheme();
+  console.log(data, 'data')
   return (
     <Box sx={{ flexGrow: 1, mb: 10 }}>
-      <SeeMoreContainer>
-        <Typography variant='h2' color={theme.colors.text}>
-          Lets Help You Find Your Dream Car
-        </Typography>
-        <Typography paragraph fontSize={25} color={'#808080'} style={{ marginBottom: 60, maxWidth: "40%", textAlign: 'center' }}>
-          We recommend the the very best and newest cars today. and also friendly prices for you
-        </Typography>
-      </SeeMoreContainer>
       <Grid container spacing={1}>
-        <Grid item xs={6} md={4} lg={4}>
-          <CarCards />
-        </Grid>
-        <Grid item xs={6} md={4} lg={4}>
-          <CarCards />
-        </Grid>
-        <Grid item xs={6} md={4} lg={4}>
-          <CarCards />
-        </Grid>
-        <Grid item xs={6} md={4} lg={4}>
-          <CarCards />
-        </Grid>
-        <Grid item xs={6} md={4} lg={4}>
-          <CarCards />
-        </Grid><Grid item xs={6} md={4} lg={4}>
-          <CarCards />
-        </Grid>
-      </Grid>
-      <SeeMoreContainer>
-        <Button style={{ fontStyle: 'uppercase' }} variant='outlined'>
-          see more
-        </Button>
-      </SeeMoreContainer>
+        {data &&
+          data.map((el, i) => (
+            <Grid key={i} item xs={6} md={4} lg={4}>
+              <CarCards onClick={toggleShowAds} data={el} />
+            </Grid>
+          ))
+        }
+        {
+          data === null &&
+          [...Array(3)].map(el => {
+            return (
+              <Grid key={el} item xs={6} md={4} lg={4}>
+                <SkeletonColor />
+              </Grid>
+            )
+          })
 
+        }
+      </Grid>
+    </Box>
+  );
+}
+
+
+function SkeletonColor() {
+  return (
+    <Box
+      sx={{
+        bgcolor: 'transparent',
+        p: 2,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        flexDirection:'column'
+      }}
+    >
+      <Skeleton
+        sx={{ bgcolor: 'grey.300' }}
+        variant="rectangular"
+        width={'100%'}
+        height={200}
+      />
+      <Typography component="div" variant={'h2'}>
+        <Skeleton />
+      </Typography>
+      <Typography component="div" variant={'h6'}>
+        <Skeleton />
+      </Typography>
     </Box>
   );
 }

@@ -1,23 +1,21 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import banner from '../../assets/images/banner2.jpeg';
-import { BrandContainer, FavouriteIconContainer } from './card.styles';
+import { FavouriteIconContainer } from './card.styles';
 import { Grid } from '@mui/material';
 import { GoLocation } from 'react-icons/go';
 import useTheme from '../../hooks/useTheme';
+import { useDispatch } from 'react-redux';
+import { getEachCar } from '../../redux/cars/car';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -34,57 +32,72 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
-export default function CarCards() {
+export default function CarCards({ onClick, data }) {
+    const { name, brand, prize, city, country, favourite, imgs } = data;
     const [expanded, setExpanded] = React.useState(false);
     const theme = useTheme();
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
-
+    const dispatch = useDispatch();
+    // const handleExpandClick = () => {
+    //     setExpanded(!expanded);
+    // };
+    const handleClick = () => {
+        onClick()
+        dispatch(getEachCar(data));
+    }
+    const Capitalize = (val: string) => {
+        let val2: string[] = `${val}`.split('');
+        val2.shift();
+        return `${val}`.charAt(0).toUpperCase() + val2.join('').toLowerCase();
+    }
+    const removeUplaod = () => {
+        const img = imgs[0].split('/');
+        img.shift()
+        return img.join('/');
+    }
     return (
-        <Card sx={{ maxWidth: 450, minWith:350 }} className="relative">
+        <Card onClick={handleClick} sx={{ maxWidth: 450, minWith: 400, minHeight:400 }} className="relative">
             <CardMedia
                 component="img"
-                height="194"
-                image={banner}
+                height="200"
+                image={removeUplaod()}
                 alt="Paella dish"
+                style={{minHeight:210}}
             />
             <FavouriteIconContainer>
                 <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
+                    <FavoriteIcon style={{ color: favourite ? theme.colors.primary : theme.colors.light }} />
                 </IconButton>
             </FavouriteIconContainer>
 
             <CardContent>
-                <Grid container>
+                <Grid container className={'min-h-full'}>
                     <Grid xs={12}>
-                        <Typography variant='h5' color={theme.colors.primary}>Bmw</Typography>
+                        <Typography variant='h5' color={theme.colors.primary}>{Capitalize(brand)}</Typography>
 
                     </Grid>
                     <Grid xs={6} className='mb-1'>
-                        <Typography variant='h4'>BMW M3</Typography>
+                        <Typography variant='h4' className='mt-1' fontSize={25}>{Capitalize(name)}</Typography>
                     </Grid>
                     <Grid xs={6} style={{ textAlign: 'right' }}>
-                        <Typography variant='h4' color={theme.colors.primary}>$760</Typography>
+                        <Typography variant='h4' className='mt-1' fontSize={30} color={theme.colors.primary}>${prize}</Typography>
                     </Grid>
                     <Grid xs={11}>
-                        <Typography variant='h5' color={'#808080'} className='flex flex-start justify-start align-center'><span className='flex-end pt-1'><GoLocation color={theme.colors.primary} size={20} /></span> Jarkata, Indonesia</Typography>
-
+                        <Typography variant='h5' color={'#808080'} className='flex flex-start justify-start align-center mt-1'><span className='flex-end mt-1'><GoLocation color={theme.colors.primary} size={20} style={{ marginRight: 10, marginTop: 2 }} /></span> {Capitalize(city)}, {Capitalize(country)}</Typography>
                     </Grid>
-                    <Grid xs={1}>
+                    {/* <Grid xs={1}>
                         <ExpandMore
                             expand={expanded}
                             onClick={handleExpandClick}
                             aria-expanded={expanded}
                             aria-label="show more"
+                            className='mt-1'
                         >
                             <ExpandMoreIcon />
                         </ExpandMore>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </CardContent>
-           
+
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <Typography variant='h2'>Method:</Typography>
