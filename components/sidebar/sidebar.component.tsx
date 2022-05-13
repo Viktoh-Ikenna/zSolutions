@@ -14,7 +14,7 @@ const { closeIcon, avatar } = Svgs;
 
 function Sidebar({ isShown, onPress }: any) {
   return (
-    <SidebarBlock isShown={isShown}>
+    <SidebarBlock isShown={false}>
       <SidebarAvatarWithCloseIconSection>
         <SidebarCloseIconWrap>
           <SidebarIconBlock onClick={onPress}>

@@ -20,10 +20,18 @@ const Cars = new mongoose.Schema({
     type: String,
   },
   specs: {
-    type: [Object],
+    type: [
+      {
+        type: String,
+      },
+    ],
   },
   info: {
-    type: Array,
+    type: [
+      {
+        type: String,
+      },
+    ],
   },
   description: {
     type: String,
@@ -35,7 +43,11 @@ const Cars = new mongoose.Schema({
     type: Boolean,
   },
   imgs: {
-    type: Array,
+    type: [
+      {
+        type: String,
+      },
+    ],
   },
   banner: {
     type: String,
@@ -43,6 +55,8 @@ const Cars = new mongoose.Schema({
   favourite: {
     type: Boolean,
   },
+  userId: {
+    type: String,
+  },
 });
-module.exports =
-  mongoose.models.Cars || mongoose.model("Cars", Cars);
+module.exports = mongoose.models.Cars || mongoose.model("Cars", Cars);

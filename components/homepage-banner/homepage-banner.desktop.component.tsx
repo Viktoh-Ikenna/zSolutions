@@ -27,9 +27,9 @@ function HomepageDesktopBanner() {
         <br />
         <HomePageBannerSubTextBlock>
           <Span>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et vel at
+          please consider using out platform for any car dealing
           </Span>
-          <Span>mauris non egestas. Non tempor dignissim lectus ultrices.</Span>
+          <Span>  we are always active</Span>
         </HomePageBannerSubTextBlock>
         <br />
         <br />

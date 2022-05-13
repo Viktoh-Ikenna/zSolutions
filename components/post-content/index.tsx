@@ -8,210 +8,136 @@ import ImageCarousel from "../image-carousel";
 import { imagesMock } from "./data.d";
 import useTheme from "../../hooks/useTheme";
 import PersonIcon from '@mui/icons-material/Person';
+import { useDispatch, useSelector } from "react-redux";
+import Hr from "../hr/hr.component";
+import { deleteCar } from "../../redux/cars/car";
 function PropertiesHeader({ showAdd, toggleShowAdd }) {
-    const theme = useTheme();
-    const [form, setForm] = useState({
-        f_name: "",
-        f_category: "Apartments",
-        f_class: "",
-        f_title: "",
-        f_location: "",
-        f_state: "",
-        f_city: "",
-        f_description: "",
-        f_price: "",
-        f_units: "",
-        f_commision: "",
-        f_files: null,
-        f_banner: null,
-    });
+  const theme = useTheme();
+  const data = useSelector(state => state.carReducers).eachCar;
+  const user = useSelector(state => state.authReducers).user_details;
+  const dispatch = useDispatch();
 
-    const [success, setSuccess] = useState("");
-    const [pending, setPending] = useState(false);
+  const removeUplaod = () => {
+    if (data) {
+      return data.imgs ? data.imgs.map(el => {
+        const img = el.split('/');
+        img.shift()
+        return { imgPath: img.join('/'), label: data.name };
+      }) : [];
+    } else {
+      return []
+    }
 
-    // create a preview as a side effect, whenever selected file is changed
-    const [viewFiles, setViewFiles] = useState();
-    const [viewFiles1, setViewFiles1] = useState([]);
-    const [newCommision, setNewCommision] = useState("");
+  }
+  const handleDeleteCar = () => {
+    dispatch(deleteCar(data._id)).then(res=>{
+      toggleShowAdd()
+    })
+  }
 
-    const {
-        f_name,
-        f_category,
-        f_class,
-        f_title,
-        f_location,
-        f_state,
-        f_city,
-        f_description,
-        f_price,
-        f_units,
-        f_commision,
-        f_files,
-        f_banner,
-    } = form;
-
-    useEffect(() => {
-        if (!f_files) {
-            setViewFiles(null);
-            return;
-        } else {
-            if (
-                typeof f_files[0]?.url === "string" ||
-                typeof f_files[1]?.url === "string"
-            ) {
-                setViewFiles(f_files[0]?.url || f_files[1]?.url);
-
-                return;
-            } else {
-                if (f_files.length > 0) {
-                    const looped: string[] = Object.keys(f_files).map(el => {
-                        return URL.createObjectURL(f_files[el])
-                    })
-                    // console.log(looped);
-                    // const objectUrl = URL.createObjectURL(f_files[0]);
-                    setViewFiles(looped[0]);
-
-                    setViewFiles1([...viewFiles1, ...looped]);
-                    // console.log(objectUrl, "ks");
-                    // free memory when ever this component is unmounted
-                    // return () => URL.revokeObjectURL(objectUrl);
-                }
-                return;
-            }
-        }
-    }, [f_files]);
-
-    // create a preview as a side effect, whenever selected file is changed
-    const [viewBanner, setViewBanner] = useState();
-    useEffect(() => {
-        if (!f_banner) {
-            setViewBanner(undefined);
-            return;
-        }
-
-        const objectUrl = URL.createObjectURL(f_banner);
-        setViewBanner(objectUrl);
-
-        // free memory when ever this component is unmounted
-        return () => URL.revokeObjectURL(objectUrl);
-    }, [f_banner]);
-
-    const imageRef = useRef(null);
-    const bannerRef = useRef(null);
-
-    const openImageSelectDialog = () => {
-        imageRef.current.click();
-    };
-
-    const openBannerSelectDialog = () => {
-        bannerRef.current.click();
-    };
-    const setClass = (e) => {
-        console.log(e.target.value, "kkk");
-        if (e.target.value === "Basic") {
-            setNewCommision("25");
-        }
-        if (e.target.value === "Classic") {
-            setNewCommision("15");
-        }
-        if (e.target.value === "Deluxe") {
-            setNewCommision("5");
-        }
-        if (e.target.value === "Premium") {
-            setNewCommision("2");
-        }
-    };
-    // console.log(newCommision, "claaaaaas");
-
-    return (
-        <>
-            <Drawer
-                anchor="right"
-                open={showAdd}
-                sx={{ width: "340px" }}
-                onClose={() => toggleShowAdd()}
-            >
-                <DrawerHeader>
-                    <div>
-                        <Typography variant="h4">Car Properties</Typography>
-                    </div>
-                    <div className="exit" onClick={() => toggleShowAdd()}>
-                        <Cancel style={{ fontSize: "30px" }} />
-                    </div>
-                </DrawerHeader>
-                <DrawerBody style={{ width: "600px" }}>
-                    <ImageCarousel images={imagesMock} />
-                </DrawerBody>
-
-                <DrawerFooter>
-                    <Grid container className="mt-5">
-                        <Grid item xs={12}>
-                            <Typography variant="h6">Car Specs</Typography>
-                            <Grid container className="mt-5 ">
-                                <Grid item xs={4}>
-                                    <SpecName name={'Max Power'} capacity={200} type={'hp'} theme={theme} />
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <SpecName name={'Max Power'} capacity={200} type={'hp'} theme={theme} />
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <SpecName name={'Max Power'} capacity={200} type={'hp'} theme={theme} />
-                                </Grid>
-                            </Grid>
-                            <Typography variant="h6" className="" style={{ marginTop: 30 }}>Car Info</Typography>
-                            <Grid className="mt-5 ">
-                                <Grid item xs={4} md={4} lg={4}>
-                                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
-                                </Grid>
-                                <Grid item xs={4} md={4} lg={4}>
-                                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
-                                </Grid>
-                                <Grid item md={4} lg={4}>
-                                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
-                                </Grid>
-                                <Grid item md={4} lg={4}>
-                                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
-                                </Grid>
-                                <Grid item md={4} lg={4}>
-                                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
-                                </Grid>
-                                <Grid item md={4} lg={4}>
-                                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid container className="absolute bottom-0 py-4 w-11/12">
-                        <Grid item xs={3}>
-                            <Typography variant="h5" fontWeight={600} style={{color:theme.colors.light}}>
-                            $7000
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={9} className="flex-right">
-                            <Button className="w-full" variant="contained">
-                                Contact Owner
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </DrawerFooter>
-            </Drawer>
-        </>
-    );
+  return (
+    <>
+      <Drawer
+        anchor="right"
+        open={showAdd}
+        sx={{ width: "340px", maxWidth: 340 }}
+        onClose={() => toggleShowAdd()}
+      >
+        <DrawerHeader>
+          <div>
+            <Typography variant="h4">Car Properties</Typography>
+          </div>
+          <div className="exit" onClick={() => toggleShowAdd()}>
+            <Cancel style={{ fontSize: "30px" }} />
+          </div>
+        </DrawerHeader>
+        {data && <DrawerBody style={{ width: "600px" }}>
+          <ImageCarousel images={removeUplaod()} />
+        </DrawerBody>}
+        {data &&
+          <DrawerFooter>
+            <Grid container className="mt-5">
+              <Grid item xs={6} md={4} lg={4}>
+                <Typography variant="h5" className="mb-5" style={{ fontWeight: 500 }} >{data.name}</Typography>
+              </Grid>
+              <Hr />
+              <Grid item xs={12} className="mt-2">
+                <Typography variant="h6">Car Specs</Typography>
+                <Grid container className="mt-5 ">
+                  <Grid item xs={4}>
+                    <SpecName name={'Max Power'} capacity={200} type={'hp'} theme={theme} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <SpecName name={'Max Power'} capacity={200} type={'hp'} theme={theme} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <SpecName name={'Max Power'} capacity={200} type={'hp'} theme={theme} />
+                  </Grid>
+                </Grid>
+                <Typography variant="h6" className="" style={{ marginTop: 30 }}>Car Info</Typography>
+                <Grid className="mt-5 ">
+                  <Grid item xs={4} md={4} lg={4}>
+                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
+                  </Grid>
+                  <Grid item xs={4} md={4} lg={4}>
+                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
+                  </Grid>
+                  <Grid item md={4} lg={4}>
+                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
+                  </Grid>
+                  <Grid item md={4} lg={4}>
+                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
+                  </Grid>
+                  <Grid item md={4} lg={4}>
+                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
+                  </Grid>
+                  <Grid item md={4} lg={4}>
+                    <Typography><PersonIcon style={{ color: theme.colors.primary }} /> 2 passengers</Typography>
+                  </Grid>
+                  <Typography variant="h6" className="" style={{ marginTop: 30 }}>Car Description</Typography>
+                  <Grid item md={4} lg={4}>
+                    <Typography paragraph className="" style={{ marginTop: 5, whiteSpace: 'break-spaces' }}>{data.description}</Typography>
+                  </Grid>
+                  <Typography variant="h6" className="" style={{ marginTop: 30 }}>Car Location</Typography>
+                  <Grid item xs={12} md={6} lg={6}>
+                    <Typography paragraph className="" style={{ marginTop: 5, whiteSpace: 'break-spaces' }}>{data.country}, {data.city}</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container className="absolute bottom-0 py-4 w-11/12">
+              <Grid item xs={3}>
+                <Typography variant="h5" fontWeight={600} style={{ color: theme.colors.light }}>
+                  ${data.prize}
+                </Typography>
+              </Grid>
+              <Grid item xs={9} className="flex-right">
+                {user?._id === data?.userId ? <Button className="w-full bg-red-600" onClick={handleDeleteCar} variant="contained">
+                  Delete Car
+                </Button> : <Button className="w-full" variant="contained">
+                  Contact Owner
+                </Button>}
+              </Grid>
+            </Grid>
+          </DrawerFooter>}
+      </Drawer>
+    </>
+  );
 }
 
 export default PropertiesHeader;
 
 PropertiesHeader.propTypes = {
-    title: PropTypes.string.isRequired,
-    subTitle: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  subTitle: PropTypes.string.isRequired,
 };
 
 const SpecName = ({ name, capacity, type, theme }: any) => (
-    <Card sx={{ maxWidth: 150, minWith: 100, width: 120, p: 1 }}>
-        <Typography color={theme.colors.light}>{name}</Typography>
-        <Typography variant="h6" fontWeight={600}>{capacity}</Typography>
-        <Typography color={theme.colors.light}>{type}</Typography>
-    </Card>
+  <Card sx={{ maxWidth: 150, minWith: 100, width: 120, p: 1 }}>
+    <Typography color={theme.colors.light}>{name}</Typography>
+    <Typography variant="h6" fontWeight={600}>{capacity}</Typography>
+    <Typography color={theme.colors.light}>{type}</Typography>
+  </Card>
 )
 const DrawerHeader = styled.div`
   position: relative;

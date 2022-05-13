@@ -10,13 +10,16 @@ import Svgs from "./../../assets/svgs";
 import Hamburger from "../hamburger/hamburger.component";
 import LoginModal from "../login";
 import SignUp from "../signup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DisplayAddPost } from "../../redux/singles/singles.actions";
 const { Logo, hamburger } = Svgs;
+
 
 function Navbar({ onPress }: any) {
   const [openLogin, setOpenLogin] = useState(false)
   const [openSignUp, setOpenSignUp] = useState(false)
+  const logged = useSelector(state => state.authReducers).user_details
+  console.log(logged, 'logged')
   const dispatch = useDispatch()
 
   const setDispayPost = (payload) => {
@@ -31,8 +34,8 @@ function Navbar({ onPress }: any) {
       <SignUp open={openSignUp} setOpen={setOpenSignUp} />
       <NavbarLinksItems />
       <LoginModal open={openLogin} setOpen={setOpenLogin} />
-      <NavbarAccountItems setOpenLogin={setOpenLogin} setOpenSignUp={setOpenSignUp} />
-      <NavbarAccountLoggedInItem add={setDispayPost} />
+      {logged === false && <NavbarAccountItems setOpenLogin={setOpenLogin} setOpenSignUp={setOpenSignUp} />}
+      {logged && <NavbarAccountLoggedInItem add={setDispayPost} />}
     </NavbarBlock>
   );
 }

@@ -11,23 +11,25 @@ import {
 import { Span } from "./../span/span.styles";
 import { ActionButton, StoreBtn } from "../button/button.component";
 import Svgs from "./../../assets/svgs";
+import useTheme from "../../hooks/useTheme";
 const { playStoreBtn, screen, clock, Cap, tutor, sittinggirl } = Svgs;
 
 function HomePageMobileBanner() {
+  const theme = useTheme()
   return (
     <>
       <HomepageMobileBannerWrap>
         <HomePageMobileBannerTextSection>
           <HomePageMobileBannerMainTextBlock>
-            <Span color="#FA8B0D">Easy And Faster Way To Sell And Buy Cars on Our Platform</Span>
+            <Span color={theme.colors.text}>Easy And Faster Way To Sell And Buy Cars on Our Platform</Span>
           </HomePageMobileBannerMainTextBlock>
           <br />
           <HomePageMobileBannerSubTextBlock>
             <Span>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et vel at
+              please consider using out platform for any car dealing
             </Span>
             <Span>
-              mauris non egestas. Non tempor dignissim lectus ultrices.
+              we are always active
             </Span>
           </HomePageMobileBannerSubTextBlock>
           {/* <br /> */}
@@ -39,32 +41,6 @@ function HomePageMobileBanner() {
             <StoreBtn src={playStoreBtn} />
           </HomePageMobileBannerBtnsSectionWrap>
           <br />
-          <HomePageMobileBannerIconsSection>
-            <HomePageBannerIconBlock>
-              <div>
-                <img src={tutor} alt="" />
-              </div>
-              <Span>50 Tutors</Span>
-            </HomePageBannerIconBlock>
-            <HomePageBannerIconBlock>
-              <div>
-                <img src={Cap} alt="" />
-              </div>
-              <Span>5000 Students</Span>
-            </HomePageBannerIconBlock>
-            <HomePageBannerIconBlock>
-              <div>
-                <img src={screen} alt="" />
-              </div>
-              <Span>2k Videos</Span>
-            </HomePageBannerIconBlock>
-            <HomePageBannerIconBlock>
-              <div>
-                <img src={clock} alt="" />
-              </div>
-              <Span>5k hrs</Span>
-            </HomePageBannerIconBlock>
-          </HomePageMobileBannerIconsSection>
         </HomePageMobileBannerTextSection>
       </HomepageMobileBannerWrap>
     </>

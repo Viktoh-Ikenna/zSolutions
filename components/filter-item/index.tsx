@@ -59,8 +59,8 @@ export default function FilterItem({ show, name, filters }: FilterItemProps) {
                     <Collapse in={expanded} timeout="auto" unmountOnExit>
                         <FormGroup>
                             {
-                                filters.map(el => (
-                                    < FormControlLabel control={< Checkbox />} label={el.label} />
+                                filters.map((el,i) => (
+                                    < FormControlLabel key={i} control={< Checkbox />} label={el.label} />
 
                                 ))
                             }

@@ -4,460 +4,381 @@ import PropTypes from "prop-types";
 import { Drawer } from "@mui/material";
 import { Cancel } from "@mui/icons-material";
 import NumberFormat from "react-number-format";
+import { addCar } from "../../redux/cars/car";
+import { useDispatch } from "react-redux";
 
 function AddPostSidebar({ addPropty, setAddPropty }) {
-    const [form, setForm] = useState({
-        f_name: "",
-        f_category: "Apartments",
-        f_class: "",
-        f_title: "",
-        f_location: "",
-        f_state: "",
-        f_city: "",
-        f_description: "",
-        f_price: "",
-        f_units: "",
-        f_commision: "",
-        f_files: null,
-        f_banner: null,
-    });
-    const [pImg, setPImg] = useState({});
+  const [form, setForm] = useState({
+    f_name: "",
+    f_category: "Apartments",
+    f_class: "",
+    f_title: "",
+    f_location: "",
+    f_state: "",
+    f_city: "",
+    f_description: "",
+    f_price: "",
+    f_units: "",
+    f_commision: "",
+    f_files: null,
+    f_banner: null,
+  });
+  const [pImg, setPImg] = useState({});
+  const dispatch = useDispatch()
+  const [success, setSuccess] = useState("");
+  const [pending, setPending] = useState(false);
 
-    const [success, setSuccess] = useState("");
-    const [pending, setPending] = useState(false);
+  // create a preview as a side effect, whenever selected file is changed
+  const [viewFiles, setViewFiles] = useState();
+  const [viewFiles1, setViewFiles1] = useState([]);
+  const [newCommision, setNewCommision] = useState("");
 
-    // create a preview as a side effect, whenever selected file is changed
-    const [viewFiles, setViewFiles] = useState();
-    const [viewFiles1, setViewFiles1] = useState([]);
-    const [newCommision, setNewCommision] = useState("");
+  const {
+    f_name,
+    f_category,
+    f_title,
+    f_state,
+    f_city,
+    f_description,
+    f_price,
+    f_files,
+    f_banner,
+  } = form;
 
-    const {
-        f_name,
-        f_category,
-        f_class,
-        f_title,
-        f_location,
-        f_state,
-        f_city,
-        f_description,
-        f_price,
-        f_units,
-        f_commision,
-        f_files,
-        f_banner,
-    } = form;
+  useEffect(() => {
+    if (!f_files) {
+      setViewFiles(null);
+      return;
+    } else {
+      if (
+        typeof f_files[0]?.url === "string" ||
+        typeof f_files[1]?.url === "string"
+      ) {
+        setViewFiles(f_files[0]?.url || f_files[1]?.url);
 
-    useEffect(() => {
-        if (!f_files) {
-            setViewFiles(null);
-            return;
-        } else {
-            if (
-                typeof f_files[0]?.url === "string" ||
-                typeof f_files[1]?.url === "string"
-            ) {
-                setViewFiles(f_files[0]?.url || f_files[1]?.url);
+        return;
+      } else {
+        if (f_files.length > 0) {
+          const looped: string[] = Object.keys(f_files).map(el => {
+            return URL.createObjectURL(f_files[el])
+          })
+          // console.log(looped);
+          // const objectUrl = URL.createObjectURL(f_files[0]);
+          setViewFiles(looped[0]);
 
-                return;
-            } else {
-                if (f_files.length > 0) {
-                    const looped:string[] = Object.keys(f_files).map(el => {
-                        return URL.createObjectURL(f_files[el])
-                    })
-                    // console.log(looped);
-                    // const objectUrl = URL.createObjectURL(f_files[0]);
-                    setViewFiles(looped[0]);
-
-                    setViewFiles1([...viewFiles1, ...looped]);
-                    // console.log(objectUrl, "ks");
-                    // free memory when ever this component is unmounted
-                    // return () => URL.revokeObjectURL(objectUrl);
-                }
-                return;
-            }
+          setViewFiles1([...looped]);
+          // console.log(objectUrl, "ks");
+          // free memory when ever this component is unmounted
+          // return () => URL.revokeObjectURL(objectUrl);
         }
-    }, [f_files]);
+        return;
+      }
+    }
+  }, [f_files]);
 
-    // create a preview as a side effect, whenever selected file is changed
-    const [viewBanner, setViewBanner] = useState();
-    useEffect(() => {
-        if (!f_banner) {
-            setViewBanner(undefined);
-            return;
-        }
+  // create a preview as a side effect, whenever selected file is changed
+  const [viewBanner, setViewBanner] = useState();
+  useEffect(() => {
+    if (!f_banner) {
+      setViewBanner(undefined);
+      return;
+    }
 
-        const objectUrl = URL.createObjectURL(f_banner);
-        setViewBanner(objectUrl);
+    const objectUrl = URL.createObjectURL(f_banner);
+    setViewBanner(objectUrl);
 
-        // free memory when ever this component is unmounted
-        return () => URL.revokeObjectURL(objectUrl);
-    }, [f_banner]);
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [f_banner]);
 
-    const imageRef = useRef(null);
-    const bannerRef = useRef(null);
+  const imageRef = useRef(null);
 
-    const openImageSelectDialog = () => {
-        imageRef.current.click();
-    };
+  const openImageSelectDialog = () => {
+    imageRef.current.click();
+  };
+  const setClass = (e) => {
+    console.log(e.target.value, "kkk");
+    if (e.target.value === "Basic") {
+      setNewCommision("25");
+    }
+    if (e.target.value === "Classic") {
+      setNewCommision("15");
+    }
+    if (e.target.value === "Deluxe") {
+      setNewCommision("5");
+    }
+    if (e.target.value === "Premium") {
+      setNewCommision("2");
+    }
+  };
 
-    const openBannerSelectDialog = () => {
-        bannerRef.current.click();
-    };
-    const setClass = (e) => {
-        console.log(e.target.value, "kkk");
-        if (e.target.value === "Basic") {
-            setNewCommision("25");
-        }
-        if (e.target.value === "Classic") {
-            setNewCommision("15");
-        }
-        if (e.target.value === "Deluxe") {
-            setNewCommision("5");
-        }
-        if (e.target.value === "Premium") {
-            setNewCommision("2");
-        }
-    };
-    // console.log(newCommision, "claaaaaas");
 
-    return (
-        <>
-            {/* ============================================================ */}
-            {/* Add new property */}
-            {/* ============================================================ */}
-            <Drawer
-                anchor="right"
-                open={addPropty}
-                sx={{ width: "450px", maxWidth:450 }}
-                onClose={() => setAddPropty(false)}
-            >
-                <DrawerHeader>
-                    <div>
-                        <h1 style={{ marginBottom: "5px" }}>Add new car</h1>
-                        <p className="subText">Create a new car here.</p>
-                    </div>
-                    <div className="exit" onClick={() => setAddPropty(false)}>
-                        <Cancel style={{ fontSize: "30px" }} />
-                    </div>
-                </DrawerHeader>
-                <form>
-                    <DrawerBody>
-                        <div className="input-group">
-                            <label>Property name</label>
-                            <div className="row1">
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="Enter the property name"
-                                    defaultValue={f_name}
-                                    onChange={(e) => setForm({ ...form, f_name: e.target.value })}
-                                />
-                            </div>
-                        </div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setPending(true);
+    const formData = new FormData(); //Create an instance of FormData // Loop through the files array and append to formData
 
-                        <div className="input-group">
-                            <label>Category</label>
-                            <div className="row1">
-                              
-                                <select
-                                    required
-                                    onChange={(e) =>
-                                        setForm({ ...form, f_category: e.target.value })
-                                    }
-                                >
-                                    <option value="">Select property category</option>
-                                    <option value="Apartments">Apartments</option>
-                                    <option value="Vacation home">Vacation home</option>
-                                    <option value="Land">Land</option>
-                                    <option value="Commercial">Commercial</option>
-                                </select>
-                            </div>
-                        </div>
+    for (let i = 0; i < f_files.length; i++) {
+      formData.append("theFiles", f_files[i]);
+    }
+    formData.append("brand", f_title);
+    formData.append("name", f_name);
 
-                        <div className="input-group">
-                            <label>Property Class</label>
-                            <div className="row1">
-                                
-                                <select required onChange={setClass}>
-                                    <option value="">Select property class</option>
-                                    <option value="Basic">Basic</option>
-                                    <option value="Classic">Classic</option>
-                                    <option value="Deluxe">Deluxe</option>
-                                    <option value="Premium">Premium</option>
-                                </select>
-                            </div>
-                        </div>
+    formData.append("prize", f_price);
+    formData.append("category", f_category);
+    formData.append("description", f_description);
+    formData.append("city", f_city);
+    formData.append("country", f_state);
+    formData.append("token", localStorage.getItem("zToken"))
 
-                        <div className="input-group">
-                            <label>Title document</label>
-                            <div className="row1">
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="Enter a title document name"
-                                    defaultValue={f_title}
-                                    onChange={(e) =>
-                                        setForm({ ...form, f_title: e.target.value })
-                                    }
-                                />
-                            </div>
-                        </div>
-                        <div style={{ display: "flex", flexWrap: "wrap", maxWidth:450 }}>
-                            {viewFiles1.map((item) => (
-                                <img src={item} style={{ width: "20%" }} />
-                            ))}
-                        </div>
-                        <div className="input-group">
-                            <label>Uploads</label>
-                            <div className="rowUpload" onClick={openImageSelectDialog}>
-                                <div className="col">
-                                    <div className="imgPreview">
-                                        {viewFiles ? (
-                                            <img
-                                                src={viewFiles}
-                                                alt="Preview"
-                                                style={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    objectFit: "contain",
-                                                }}
-                                            />
-                                        ) : (
-                                            <span>+</span>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <label className="properLabel">Property Image*</label>
-                                    <p className="uploadText">
-                                        Upload the image for this property
-                                    </p>
-                                    <input
-                                        className="upload_input"
-                                        type="file"
-                                        accept="image/*"
-                                        multiple
-                                        ref={imageRef}
-                                        onChange={(e) =>
-                                            setForm({ ...form, f_files: e.target.files })
-                                        }
-                                    />
-                                    <button>
-                                        <span>+</span> Select File
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+    dispatch<any>(addCar(formData))
+      .then((data) => {
+        setPending(false);
+        setAddPropty(false)
+        setForm({
+          f_name: "",
+          f_category: "Apartments",
+          f_class: "",
+          f_title: "",
+          f_location: "",
+          f_state: "",
+          f_city: "",
+          f_description: "",
+          f_price: "",
+          f_units: "",
+          f_commision: "",
+          f_files: null,
+          f_banner: null,
+        })
+      }
+      )
+  }
+  // console.log(newCommision, "claaaaaas");
+  const removeSelected = (id) => {
+    setViewFiles1((prev) => [...prev.filter((el, i) => !(i === id))]);
+    let newFileList = Array.from(f_files);
+    newFileList.splice(id, 1);
+    setForm((prev) => ({
+      ...prev,
+      f_files: newFileList,
+    }));
+  };
 
-                        <div className="input-group">
-                            <div className="rowUpload" onClick={openBannerSelectDialog}>
-                                <div className="col">
-                                    <div className="imgPreview">
-                                        {viewBanner ? (
-                                            <img
-                                                src={
-                                                    viewBanner == "null"
-                                                        ? "https://via.placeholder.com/150"
-                                                        : viewBanner
-                                                }
-                                                style={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    objectFit: "contain",
-                                                }}
-                                            />
-                                        ) : (
-                                            <span>+</span>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <label className="properLabel">Property Banner*</label>
-                                    <p className="uploadText">
-                                        Upload the banner for this property
-                                    </p>
-                                    <input
-                                        className="upload_input"
-                                        type="file"
-                                        accept="image/*"
-                                        ref={bannerRef}
-                                        onChange={(e) =>
-                                            setForm({ ...form, f_banner: e.target.files[0] })
-                                        }
-                                    />
-                                    <button>
-                                        <span>+</span> Select File
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </DrawerBody>
-                    <DrawerBody>
-                        <div className="input-group">
-                            <label>Location</label>
-                            <div className="row1">
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="Enter property location"
-                                    defaultValue={f_location}
-                                    onChange={(e) =>
-                                        setForm({ ...form, f_location: e.target.value })
-                                    }
-                                />
-                            </div>
-                        </div>
-
-                        <div className="input-group">
-                            <div className="row4">
-                                <div className="col">
-                                    <label>State</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="Enter State"
-                                        defaultValue={f_state}
-                                        onChange={(e) =>
-                                            setForm({ ...form, f_state: e.target.value })
-                                        }
-                                    />
-                                </div>
-                                <div className="col">
-                                    <label>City</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="Enter City"
-                                        defaultValue={f_city}
-                                        onChange={(e) =>
-                                            setForm({ ...form, f_city: e.target.value })
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="input-group">
-                            <label>Description</label>
-                            <div className="row1">
-                                <textarea
-                                    rows="10"
-                                    required
-                                    placeholder="Enter description of property"
-                                    defaultValue={f_description}
-                                    onChange={(e) =>
-                                        setForm({ ...form, f_description: e.target.value })
-                                    }
-                                ></textarea>
-                            </div>
-                        </div>
-                    </DrawerBody>
-                    <DrawerFooter>
-                        <div className="input-group">
-                            <label>Price</label>
-                            <div className="row1">
-                                {/* <input
+  return (
+    <>
+      {/* ============================================================ */}
+      {/* Add new property */}
+      {/* ============================================================ */}
+      <Drawer
+        anchor="right"
+        open={addPropty}
+        sx={{ width: "450px", maxWidth: 450 }}
+        onClose={() => setAddPropty(false)}
+      >
+        <DrawerHeader>
+          <div>
+            <h1 style={{ marginBottom: "5px" }}>Add new car</h1>
+            <p className="subText">Create a new car here.</p>
+          </div>
+          <div className="exit" onClick={() => setAddPropty(false)}>
+            <Cancel style={{ fontSize: "30px" }} />
+          </div>
+        </DrawerHeader>
+        <form onSubmit={handleSubmit}>
+          <DrawerBody>
+            <div className="input-group">
+              <label>Name</label>
+              <div className="row1">
+                <input
                   type="text"
                   required
-                  placeholder="Enter property price"
-                  defaultValue={f_price}
+                  placeholder="Enter the property name"
+                  defaultValue={f_name}
+                  onChange={(e) => setForm({ ...form, f_name: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Brand</label>
+              <div className="row1">
+                <input
+                  type="text"
+                  required
+                  placeholder="Enter a title document name"
+                  defaultValue={f_title}
                   onChange={(e) =>
-                    setForm({ ...form, f_price: e.target.value })
+                    setForm({ ...form, f_title: e.target.value })
                   }
-                /> */}
+                />
+              </div>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", maxWidth: 450 }}>
+              {viewFiles1.map((item, i) => (
+                <ImageCont key={i}>
+                  <IconCancel
+                    className="exit"
+                    onClick={() => removeSelected(i)}
+                  >
+                    <Cancel style={{ fontSize: "20px" }} />
+                  </IconCancel>
+                  <img src={item} style={{ width: "100%", margin: "1% 1%" }} />
+                </ImageCont>
+              ))}
 
-                                <NumberFormat
-                                    value={f_price}
-                                    name={f_price}
-                                    displayType={"input"}
-                                    placeholder="Enter property price"
-                                    thousandSeparator={true}
-                                    prefix={"₦"}
-                                    decimalSeparator="."
-                                    allowNegative={true}
-                                    // renderText={(value, props) => <div {...props}>{value}</div>}
-                                    // onValueChange={(e) =>
-                                    //   setForm({ ...form, f_price: e.target.value })
-                                    // }
-                                    onValueChange={(values) => {
-                                        const { value } = values;
-                                        // formattedValue = $2,223
-                                        // value ie, 2223
-                                        setForm({ ...form, f_price: value });
-                                    }}
-                                />
-                            </div>
-                        </div>
+            </div>
+            <div className="input-group">
+              <label>Uploads</label>
+              <div className="rowUpload" onClick={openImageSelectDialog}>
+                <div className="col">
+                  <div className="imgPreview">
+                    {viewFiles ? (
+                      <img
+                        src={viewFiles}
+                        alt="Preview"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                        }}
+                      />
+                    ) : (
+                      <span>+</span>
+                    )}
+                  </div>
+                </div>
+                <div className="col">
+                  <label className="properLabel">Property Image*</label>
+                  <p className="uploadText">
+                    Upload the image for this property
+                  </p>
+                  <input
+                    className="upload_input"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    ref={imageRef}
+                    onChange={(e) =>
+                      setForm({ ...form, f_files: e.target.files })
+                    }
+                  />
+                  <button>
+                    <span>+</span> Select File
+                  </button>
+                </div>
+              </div>
+            </div>
+          </DrawerBody>
+          <DrawerBody>
+            <div className="input-group">
+              <div className="row4">
+                <div className="col">
+                  <label>Country</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter State"
+                    defaultValue={f_state}
+                    onChange={(e) =>
+                      setForm({ ...form, f_state: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="col">
+                  <label>City</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter City"
+                    defaultValue={f_city}
+                    onChange={(e) =>
+                      setForm({ ...form, f_city: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
 
-                        <div className="input-group">
-                            <div className="row4">
-                                <div className="col">
-                                    <label>Acquired unit(s)</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="Unit/Lot/sqm"
-                                        defaultValue={f_units}
-                                        onChange={(e) =>
-                                            setForm({ ...form, f_units: e.target.value })
-                                        }
-                                    />
-                                </div>
-                                <div className="col">
-                                    <label>Commission</label>
-                                    <input
-                                        disabled
-                                        type="text"
-                                        required
-                                        placeholder="Enter Commission"
-                                        defaultValue={newCommision}
-                                        onChange={(e) =>
-                                            setForm({ ...form, f_commision: newCommision })
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </div>
+            <div className="input-group">
+              <label>Description</label>
+              <div className="row1">
+                <textarea
+                  rows="10"
+                  required
+                  placeholder="Enter description of property"
+                  defaultValue={f_description}
+                  onChange={(e) =>
+                    setForm({ ...form, f_description: e.target.value })
+                  }
+                ></textarea>
+              </div>
+            </div>
+          </DrawerBody>
+          <DrawerFooter>
+            <div className="input-group">
+              <label>Price</label>
+              <div className="row1">
+                <NumberFormat
+                  value={f_price}
+                  name={f_price}
+                  displayType={"input"}
+                  placeholder="Enter property price"
+                  thousandSeparator={true}
+                  prefix={"$"}
+                  decimalSeparator="."
+                  allowNegative={true}
+                  // renderText={(value, props) => <div {...props}>{value}</div>}
+                  // onValueChange={(e) =>
+                  //   setForm({ ...form, f_price: e.target.value })
+                  // }
+                  onValueChange={(values) => {
+                    const { value } = values;
+                    // formattedValue = $2,223
+                    // value ie, 2223
+                    setForm({ ...form, f_price: value });
+                  }}
+                />
+              </div>
+            </div>
 
-                        <div className="submit">
-                            {success &&
-                                (success === "successful" ? (
-                                    <p
-                                        style={{ fontSize: "12px", color: "green", margin: "10px" }}
-                                    >
-                                        New Property: {success}
-                                    </p>
-                                ) : (
-                                    <p style={{ fontSize: "12px", color: "red", margin: "10px" }}>
-                                        New Property: {success}
-                                    </p>
-                                ))}
-                            {pending ? (
-                                <p
-                                    style={{
-                                        fontSize: "1.5rem",
-                                        background: "#ccc",
-                                        padding: "10px",
-                                        textAlign: "center",
-                                        borderRadius: "8px",
-                                        cursor: "pointer",
-                                    }}
-                                >
-                                    Loading . . .
-                                </p>
-                            ) : (
-                                <button>Submit</button>
-                            )}
-                        </div>
-                    </DrawerFooter>
-                </form>
-            </Drawer>
-        </>
-    );
+            <div className="submit">
+              {success &&
+                (success === "successful" ? (
+                  <p
+                    style={{ fontSize: "12px", color: "green", margin: "10px" }}
+                  >
+                    New Property: {success}
+                  </p>
+                ) : (
+                  <p style={{ fontSize: "12px", color: "red", margin: "10px" }}>
+                    New Property: {success}
+                  </p>
+                ))}
+              {pending ? (
+                <p
+                  style={{
+                    fontSize: "1.5rem",
+                    background: "#ccc",
+                    padding: "10px",
+                    textAlign: "center",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Loading . . .
+                </p>
+              ) : (
+                <button>Submit</button>
+              )}
+            </div>
+          </DrawerFooter>
+        </form>
+      </Drawer>
+    </>
+  );
 }
 
 export default AddPostSidebar;
-
 
 const DrawerHeader = styled.div`
   position: relative;
@@ -466,7 +387,15 @@ const DrawerHeader = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid #0404061a;
 `;
-
+const ImageCont = styled.div`
+  position: relative;
+  width: 20%;
+`;
+const IconCancel = styled.div`
+  position: absolute;
+  top: 1px;
+  right: 1px;
+`;
 const DrawerBody = styled.div`
   padding: 0px 30px;
   border-bottom: 1px solid #0404061a;
